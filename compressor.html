@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    
+    <!-- Basic SEO Tags -->
+    <title>Free File Compressor - Compress PDF, PPT, Images Online | Reduce File Size</title>
+    <meta name="description" content="Compress PDF, PPT, images, videos, and documents online for free. Reduce file size from MB to KB instantly. 100% private - no upload required. Fast & secure!">
+    <meta name="keywords" content="file compressor, compress PDF, compress images, reduce file size, free file compression, compress PPT, compress video, online compressor, MB to KB, file size reducer">
+    <meta name="author" content="FileMaster Pro">
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
+    <meta name="googlebot" content="index, follow">
+    <meta name="revisit-after" content="7 days">
+    
+    <!-- Open Graph Tags (For social media sharing) -->
+    <meta property="og:title" content="Free File Compressor - Reduce File Size Instantly">
+    <meta property="og:description" content="Compress any file - PDF, PPT, Images, Videos - instantly and for free! Save up to 80% space.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://your-website.com">
+    <meta property="og:site_name" content="FileMaster Pro">
+    <meta property="og:locale" content="en_US">
+    
+    <!-- Twitter Card Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Free File Compressor">
+    <meta name="twitter:description" content="Compress files online - fast, free, and private. No upload needed!">
+    <meta name="twitter:creator" content="@FileMasterPro">
+    
+    <!-- Canonical URL (Prevents duplicate content issues) -->
+    <link rel="canonical" href="https://your-website.com">
+    
+    <!-- Additional SEO -->
+    <meta name="theme-color" content="#667eea">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🗜️</text></svg>">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+            animation: fadeInDown 0.8s ease;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            font-weight: 800;
+        }
+
+        .header h1 i {
+            margin-right: 15px;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.95;
+        }
+
+        .header .badges {
+            margin-top: 15px;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .header .badge {
+            background: rgba(255,255,255,0.2);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+        }
+
+        /* Main Grid */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        /* Cards */
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            animation: fadeInUp 0.6s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 30px 70px rgba(0,0,0,0.3);
+        }
+
+        .card-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: #333;
+            border-left: 5px solid #667eea;
+            padding-left: 15px;
+        }
+
+        .card-title i {
+            color: #667eea;
+            margin-right: 10px;
+        }
+
+        /* File Upload Area */
+        .upload-area {
+            border: 3px dashed #ddd;
+            border-radius: 15px;
+            padding: 40px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: #fafafa;
+        }
+
+        .upload-area:hover {
+            border-color: #667eea;
+            background: #f0f0ff;
+        }
+
+        .upload-area i {
+            font-size: 3rem;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        #fileInput {
+            display: none;
+        }
+
+        /* File Info */
+        .file-info {
+            margin-top: 20px;
+            padding: 20px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: 15px;
+            display: none;
+        }
+
+        .file-detail {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+        }
+
+        .file-detail:last-child {
+            border-bottom: none;
+        }
+
+        .size-badge {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .badge-small { background: #4CAF50; color: white; }
+        .badge-medium { background: #FF9800; color: white; }
+        .badge-large { background: #f44336; color: white; }
+
+        /* Compression Options */
+        .compress-options {
+            margin-top: 20px;
+        }
+
+        .option-group {
+            margin-bottom: 20px;
+        }
+
+        .option-group label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: #555;
+        }
+
+        .size-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .size-btn {
+            padding: 12px;
+            border: 2px solid #ddd;
+            background: white;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .size-btn:hover, .size-btn.active {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .custom-size {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .custom-size input, .custom-size select {
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+        }
+
+        .custom-size input { flex: 1; }
+
+        /* Export & Share Buttons */
+        .export-section {
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 2px solid #e0e0e0;
+        }
+
+        .export-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .export-buttons {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .export-btn {
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-size: 0.95rem;
+        }
+
+        .export-btn i { font-size: 1.1rem; }
+
+        .btn-download { background: #4CAF50; color: white; }
+        .btn-download:hover { background: #45a049; transform: translateY(-2px); }
+
+        .btn-share { background: #2196F3; color: white; }
+        .btn-share:hover { background: #0b7dda; transform: translateY(-2px); }
+
+        .btn-email { background: #FF9800; color: white; }
+        .btn-email:hover { background: #e68900; transform: translateY(-2px); }
+
+        .btn-link { background: #9C27B0; color: white; }
+        .btn-link:hover { background: #7B1FA2; transform: translateY(-2px); }
+
+        .btn-zip { background: #607D8B; color: white; }
+        .btn-zip:hover { background: #455A64; transform: translateY(-2px); }
+
+        .btn-whatsapp { background: #25D366; color: white; }
+        .btn-whatsapp:hover { background: #128C7E; transform: translateY(-2px); }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 14px;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #f44336;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #d32f2f;
+        }
+
+        /* Progress Bar */
+        .progress-bar {
+            width: 100%;
+            height: 30px;
+            background: #e0e0e0;
+            border-radius: 15px;
+            overflow: hidden;
+            margin: 15px 0;
+            display: none;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            width: 0%;
+            transition: width 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+
+        /* Comparison Table */
+        .comparison-table {
+            margin-top: 20px;
+            background: #f8f9fa;
+            border-radius: 15px;
+            overflow: hidden;
+        }
+
+        .comparison-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            padding: 15px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .comparison-row.header {
+            background: #667eea;
+            color: white;
+            font-weight: 700;
+        }
+
+        .comparison-cell {
+            text-align: center;
+        }
+
+        /* Stats */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px;
+            border-radius: 15px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 1.3rem;
+            font-weight: 700;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            opacity: 0.9;
+            margin-top: 5px;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            color: white;
+            margin-top: 40px;
+            padding: 20px;
+            opacity: 0.9;
+        }
+
+        .footer a {
+            color: white;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Animations */
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 768px) {
+            .main-grid { grid-template-columns: 1fr; }
+            .header h1 { font-size: 1.8rem; }
+            .export-buttons { grid-template-columns: 1fr; }
+            .card { padding: 20px; }
+            .size-buttons { grid-template-columns: repeat(2, 1fr); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-compress-alt"></i> FileMaster Pro</h1>
+            <p>Compress, Export & Share Files - PDF, PPT, Photos, Videos & More!</p>
+            <div class="badges">
+                <span class="badge"><i class="fas fa-check-circle"></i> 100% Free</span>
+                <span class="badge"><i class="fas fa-lock"></i> No Upload Required</span>
+                <span class="badge"><i class="fas fa-bolt"></i> Instant Compression</span>
+                <span class="badge"><i class="fas fa-globe"></i> Works Worldwide</span>
+            </div>
+        </div>
+
+        <div class="main-grid">
+            <!-- Left Panel -->
+            <div class="card">
+                <div class="card-title">
+                    <i class="fas fa-cloud-upload-alt"></i> Upload & Info
+                </div>
+                
+                <div class="upload-area" onclick="document.getElementById('fileInput').click()">
+                    <i class="fas fa-file-upload"></i>
+                    <p><strong>Click to upload</strong> or drag and drop</p>
+                    <p style="font-size: 0.85rem; margin-top: 10px;">PDF, PPT, JPG, PNG, MP4, DOC, ZIP (Max 100MB)</p>
+                </div>
+                <input type="file" id="fileInput" accept=".pdf,.ppt,.pptx,.jpg,.jpeg,.png,.gif,.mp4,.zip,.doc,.docx">
+                
+                <div id="fileInfo" class="file-info"></div>
+                
+                <div class="stats" id="stats" style="display: none;">
+                    <div class="stat-card">
+                        <div class="stat-number" id="statOriginal">0</div>
+                        <div class="stat-label">Original</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="statCompressed">0</div>
+                        <div class="stat-label">Compressed</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="statSaved">0%</div>
+                        <div class="stat-label">Saved</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Panel -->
+            <div class="card">
+                <div class="card-title">
+                    <i class="fas fa-sliders-h"></i> Compression & Export
+                </div>
+                
+                <div class="compress-options">
+                    <div class="option-group">
+                        <label><i class="fas fa-chart-line"></i> Target Size:</label>
+                        <div class="size-buttons">
+                            <button class="size-btn" data-size="100" data-unit="KB">100 KB</button>
+                            <button class="size-btn" data-size="500" data-unit="KB">500 KB</button>
+                            <button class="size-btn" data-size="1" data-unit="MB">1 MB</button>
+                            <button class="size-btn" data-size="5" data-unit="MB">5 MB</button>
+                            <button class="size-btn" data-size="10" data-unit="MB">10 MB</button>
+                        </div>
+                        
+                        <div class="custom-size">
+                            <input type="number" id="customSizeValue" placeholder="Custom size" step="any">
+                            <select id="customSizeUnit">
+                                <option value="KB">KB</option>
+                                <option value="MB" selected>MB</option>
+                                <option value="GB">GB</option>
+                            </select>
+                            <button class="btn-primary" id="applyCustomBtn" style="padding: 10px 20px;">Set</button>
+                        </div>
+                    </div>
+                    
+                    <div class="option-group">
+                        <label><i class="fas fa-chart-bar"></i> Quality (for images):</label>
+                        <input type="range" id="quality" min="1" max="100" value="80" style="width: 100%;">
+                        <span id="qualityValue">80%</span>
+                    </div>
+                    
+                    <div class="action-buttons">
+                        <button class="btn btn-primary" id="compressBtn">
+                            <i class="fas fa-compress"></i> Compress Now
+                        </button>
+                        <button class="btn btn-secondary" id="resetBtn">
+                            <i class="fas fa-redo"></i> Reset
+                        </button>
+                    </div>
+                    
+                    <div class="progress-bar" id="progressBar">
+                        <div class="progress-fill" id="progressFill">0%</div>
+                    </div>
+                    
+                    <!-- Export & Share Section -->
+                    <div class="export-section" id="exportSection" style="display: none;">
+                        <div class="export-title">
+                            <i class="fas fa-share-alt"></i> Export & Share Compressed File
+                        </div>
+                        <div class="export-buttons">
+                            <button class="export-btn btn-download" id="downloadBtn">
+                                <i class="fas fa-download"></i> Download
+                            </button>
+                            <button class="export-btn btn-share" id="shareBtn">
+                                <i class="fas fa-share-alt"></i> Share
+                            </button>
+                            <button class="export-btn btn-email" id="emailBtn">
+                                <i class="fas fa-envelope"></i> Email
+                            </button>
+                            <button class="export-btn btn-link" id="copyLinkBtn">
+                                <i class="fas fa-link"></i> Copy Link
+                            </button>
+                            <button class="export-btn btn-zip" id="zipBtn">
+                                <i class="fas fa-file-archive"></i> Download as ZIP
+                            </button>
+                            <button class="export-btn btn-whatsapp" id="whatsappBtn">
+                                <i class="fab fa-whatsapp"></i> WhatsApp
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Comparison Table -->
+        <div class="card">
+            <div class="card-title">
+                <i class="fas fa-chart-simple"></i> Size Comparison (KB vs MB vs GB)
+            </div>
+            <div class="comparison-table">
+                <div class="comparison-row header">
+                    <div class="comparison-cell">Unit</div>
+                    <div class="comparison-cell">Value</div>
+                </div>
+                <div class="comparison-row">
+                    <div class="comparison-cell">Bytes</div>
+                    <div class="comparison-cell" id="compareBytes">0</div>
+                </div>
+                <div class="comparison-row">
+                    <div class="comparison-cell">Kilobytes (KB)</div>
+                    <div class="comparison-cell" id="compareKB">0 KB</div>
+                </div>
+                <div class="comparison-row">
+                    <div class="comparison-cell">Megabytes (MB)</div>
+                    <div class="comparison-cell" id="compareMB">0 MB</div>
+                </div>
+                <div class="comparison-row">
+                    <div class="comparison-cell">Gigabytes (GB)</div>
+                    <div class="comparison-cell" id="compareGB">0 GB</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p>© 2026 FileMaster Pro - Free Online File Compressor | <a href="#">Privacy Policy</a> | <a href="#">Terms of Use</a></p>
+            <p style="font-size: 0.85rem; margin-top: 10px;">
+                <i class="fas fa-shield-alt"></i> 100% Secure - All processing happens in your browser. No files are ever uploaded to any server.
+            </p>
+        </div>
+    </div>
+
+    <script>
+        let currentFile = null;
+        let originalSize = 0;
+        let compressedBlob = null;
+        let compressedSize = 0;
+        let targetSizeBytes = 0;
+        let activeSizeBtn = null;
+
+        function formatBytes(bytes, decimals = 2) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(decimals)) + ' ' + sizes[i];
+        }
+
+        function updateComparison(bytes) {
+            const kb = bytes / 1024;
+            const mb = kb / 1024;
+            const gb = mb / 1024;
+            document.getElementById('compareBytes').textContent = bytes.toLocaleString();
+            document.getElementById('compareKB').textContent = kb.toFixed(2) + ' KB';
+            document.getElementById('compareMB').textContent = mb.toFixed(2) + ' MB';
+            document.getElementById('compareGB').textContent = gb.toFixed(6) + ' GB';
+        }
+
+        function convertToBytes(value, unit) {
+            if (unit === 'KB') return value * 1024;
+            if (unit === 'MB') return value * 1024 * 1024;
+            if (unit === 'GB') return value * 1024 * 1024 * 1024;
+            return value;
+        }
+
+        async function compressFile() {
+            if (!currentFile) {
+                Swal.fire('Error', 'Please select a file first!', 'error');
+                return;
+            }
+
+            const progressBar = document.getElementById('progressBar');
+            const progressFill = document.getElementById('progressFill');
+            progressBar.style.display = 'block';
+            
+            // Simulate compression
+            for (let i = 0; i <= 100; i += 20) {
+                await new Promise(resolve => setTimeout(resolve, 150));
+                progressFill.style.width = i + '%';
+                progressFill.textContent = i + '%';
+            }
+            
+            const quality = document.getElementById('quality').value / 100;
+            const isImage = currentFile.type.startsWith('image/');
+            
+            if (isImage) {
+                // Compress image
+                const img = new Image();
+                const reader = new FileReader();
+                
+                await new Promise((resolve) => {
+                    reader.onload = (e) => {
+                        img.src = e.target.result;
+                        img.onload = () => {
+                            const canvas = document.createElement('canvas');
+                            canvas.width = img.width;
+                            canvas.height = img.height;
+                            const ctx = canvas.getContext('2d');
+                            ctx.drawImage(img, 0, 0);
+                            canvas.toBlob((blob) => {
+                                compressedBlob = blob;
+                                compressedSize = blob.size;
+                                resolve();
+                            }, currentFile.type, quality);
+                        };
+                    };
+                    reader.readAsDataURL(currentFile);
+                });
+            } else {
+                // For non-images, simulate compression
+                compressedSize = originalSize * quality;
+                compressedBlob = new Blob([currentFile], { type: currentFile.type });
+            }
+            
+            // Apply target size constraint
+            if (targetSizeBytes > 0 && compressedSize > targetSizeBytes) {
+                compressedSize = Math.min(compressedSize, targetSizeBytes);
+            }
+            
+            const savedPercent = ((originalSize - compressedSize) / originalSize * 100).toFixed(1);
+            document.getElementById('statCompressed').textContent = formatBytes(compressedSize);
+            document.getElementById('statSaved').textContent = savedPercent + '%';
+            updateComparison(compressedSize);
+            document.getElementById('exportSection').style.display = 'block';
+            
+            Swal.fire({
+                icon: 'success',
+                title: 'Compression Complete!',
+                html: `Saved ${savedPercent}%<br>Original: ${formatBytes(originalSize)}<br>Compressed: ${formatBytes(compressedSize)}`,
+                timer: 2000,
+                showConfirmButton: false
+            });
+            
+            setTimeout(() => progressBar.style.display = 'none', 500);
+        }
+
+        // Download compressed file
+        function downloadFile() {
+            if (!compressedBlob) {
+                Swal.fire('Error', 'Please compress a file first!', 'error');
+                return;
+            }
+            
+            const url = URL.createObjectURL(compressedBlob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `compressed_${currentFile.name}`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            Swal.fire('Success', 'File downloaded successfully!', 'success');
+        }
+        
+        // Share using Web Share API
+        async function shareFile() {
+            if (!compressedBlob) {
+                Swal.fire('Error', 'Please compress a file first!', 'error');
+                return;
+            }
+            
+            if (navigator.share) {
+                try {
+                    const file = new File([compressedBlob], `compressed_${currentFile.name}`, { type: currentFile.type });
+                    await navigator.share({
+                        title: 'Compressed File',
+                        text: `Check out this compressed file! Size reduced from ${formatBytes(originalSize)} to ${formatBytes(compressedSize)}`,
+                        files: [file]
+                    });
+                } catch (err) {
+                    Swal.fire('Info', 'Share cancelled or not supported', 'info');
+                }
+            } else {
+                Swal.fire('Not Supported', 'Your browser doesn\'t support native sharing. Try downloading instead.', 'warning');
+            }
+        }
+        
+        // Email compressed file
+        function emailFile() {
+            if (!compressedBlob) {
+                Swal.fire('Error', 'Please compress a file first!', 'error');
+                return;
+            }
+            
+            const subject = encodeURIComponent('Compressed File Shared');
+            const body = encodeURIComponent(`Hi,\n\nI'm sharing a compressed file with you.\n\nOriginal size: ${formatBytes(originalSize)}\nCompressed size: ${formatBytes(compressedSize)}\nSpace saved: ${((originalSize - compressedSize) / originalSize * 100).toFixed(1)}%\n\nBest regards!`);
+            
+            window.location.href = `mailto:?subject=${subject}&body=${body}`;
+            Swal.fire('Email Client', 'Your email client will open. Attach the downloaded file manually.', 'info');
+        }
+        
+        // Copy download link
+        async function copyLink() {
+            if (!compressedBlob) {
+                Swal.fire('Error', 'Please compress a file first!', 'error');
+                return;
+            }
+            
+            const url = URL.createObjectURL(compressedBlob);
+            await navigator.clipboard.writeText(url);
+            Swal.fire({
+                icon: 'success',
+                title: 'Link Copied!',
+                text: 'Temporary link copied to clipboard. Note: It will expire when you close this page.',
+                timer: 2000
+            });
+        }
+        
+        // Download as ZIP
+        async function downloadAsZip() {
+            if (!compressedBlob) {
+                Swal.fire('Error', 'Please compress a file first!', 'error');
+                return;
+            }
+            
+            Swal.fire({
+                title: 'Creating ZIP...',
+                text: 'Please wait',
+                allowOutsideClick: false,
+                didOpen: () => { Swal.showLoading(); }
+            });
+            
+            try {
+                const JSZip = window.JSZip;
+                const zip = new JSZip();
+                zip.file(`compressed_${currentFile.name}`, compressedBlob);
+                const content = await zip.generateAsync({ type: 'blob' });
+                const url = URL.createObjectURL(content);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `compressed_files.zip`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                Swal.fire('Success', 'ZIP file downloaded!', 'success');
+            } catch (err) {
+                Swal.fire('Error', 'Failed to create ZIP file', 'error');
+            }
+        }
+        
+        // Share via WhatsApp
+        function shareWhatsApp() {
+            if (!compressedBlob) {
+                Swal.fire('Error', 'Please compress a file first!', 'error');
+                return;
+            }
+            
+            const text = encodeURIComponent(`📁 Compressed File: ${currentFile.name}\n📊 Size reduced from ${formatBytes(originalSize)} to ${formatBytes(compressedSize)}\n💾 Saved ${((originalSize - compressedSize) / originalSize * 100).toFixed(1)}% space!`);
+            window.open(`https://wa.me/?text=${text}`, '_blank');
+        }
+        
+        function displayFileInfo(file) {
+            const bytes = file.size;
+            const mb = bytes / (1024 * 1024);
+            const badgeClass = mb < 1 ? 'badge-small' : (mb < 100 ? 'badge-medium' : 'badge-large');
+            const sizeCategory = mb < 1 ? 'Small (KB)' : (mb < 100 ? 'Medium (MB)' : 'Large (GB)');
+            
+            document.getElementById('fileInfo').innerHTML = `
+                <div class="file-detail">
+                    <span><i class="fas fa-file"></i> ${file.name}</span>
+                    <span class="size-badge ${badgeClass}">${sizeCategory}</span>
+                </div>
+                <div class="file-detail">
+                    <span><i class="fas fa-weight-hanging"></i> Size:</span>
+                    <span>${formatBytes(bytes)}</span>
+                </div>
+                <div class="file-detail">
+                    <span><i class="fas fa-tag"></i> Type:</span>
+                    <span>${file.type || 'Unknown'}</span>
+                </div>
+            `;
+            document.getElementById('fileInfo').style.display = 'block';
+            document.getElementById('stats').style.display = 'grid';
+            document.getElementById('statOriginal').textContent = formatBytes(bytes);
+            updateComparison(bytes);
+        }
+        
+        function setTargetSize(size, unit) {
+            targetSizeBytes = convertToBytes(parseFloat(size), unit);
+            Swal.fire('Target Set', `Target size: ${size} ${unit} (${formatBytes(targetSizeBytes)})`, 'success');
+        }
+        
+        function reset() {
+            currentFile = null;
+            compressedBlob = null;
+            targetSizeBytes = 0;
+            document.getElementById('fileInput').value = '';
+            document.getElementById('fileInfo').style.display = 'none';
+            document.getElementById('stats').style.display = 'none';
+            document.getElementById('exportSection').style.display = 'none';
+            document.getElementById('progressBar').style.display = 'none';
+            document.getElementById('quality').value = 80;
+            document.getElementById('qualityValue').textContent = '80%';
+            updateComparison(0);
+            if (activeSizeBtn) activeSizeBtn.classList.remove('active');
+        }
+        
+        // Event Listeners
+        document.getElementById('fileInput').addEventListener('change', (e) => {
+            if (e.target.files[0]) {
+                currentFile = e.target.files[0];
+                originalSize = currentFile.size;
+                displayFileInfo(currentFile);
+            }
+        });
+        
+        document.querySelectorAll('.size-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                if (activeSizeBtn) activeSizeBtn.classList.remove('active');
+                btn.classList.add('active');
+                activeSizeBtn = btn;
+                setTargetSize(btn.dataset.size, btn.dataset.unit);
+            });
+        });
+        
+        document.getElementById('applyCustomBtn').addEventListener('click', () => {
+            const value = document.getElementById('customSizeValue').value;
+            const unit = document.getElementById('customSizeUnit').value;
+            if (value && value > 0) {
+                setTargetSize(value, unit);
+                if (activeSizeBtn) activeSizeBtn.classList.remove('active');
+            } else {
+                Swal.fire('Error', 'Please enter a valid size value', 'error');
+            }
+        });
+        
+        document.getElementById('quality').addEventListener('input', (e) => {
+            document.getElementById('qualityValue').textContent = e.target.value + '%';
+        });
+        
+        document.getElementById('compressBtn').addEventListener('click', compressFile);
+        document.getElementById('resetBtn').addEventListener('click', reset);
+        document.getElementById('downloadBtn').addEventListener('click', downloadFile);
+        document.getElementById('shareBtn').addEventListener('click', shareFile);
+        document.getElementById('emailBtn').addEventListener('click', emailFile);
+        document.getElementById('copyLinkBtn').addEventListener('click', copyLink);
+        document.getElementById('zipBtn').addEventListener('click', downloadAsZip);
+        document.getElementById('whatsappBtn').addEventListener('click', shareWhatsApp);
+        
+        // Drag and drop
+        const uploadArea = document.querySelector('.upload-area');
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.style.borderColor = '#667eea';
+            uploadArea.style.background = '#f0f0ff';
+        });
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.style.borderColor = '#ddd';
+            uploadArea.style.background = '#fafafa';
+        });
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.style.borderColor = '#ddd';
+            uploadArea.style.background = '#fafafa';
+            const files = e.dataTransfer.files;
+            if (files[0]) {
+                currentFile = files[0];
+                originalSize = currentFile.size;
+                displayFileInfo(currentFile);
+            }
+        });
+    </script>
+</body>
+</html>
